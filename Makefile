@@ -7,11 +7,7 @@
 ########## USER DEFINITIONS
 ##############################################################################################
 
-LIB_DIRS 	:= 	./Tools \
-				../GraphicsFramework/GraphicsFramework \
-				../GraphicsFramework/GraphicsFramework/sfml \
-				../GraphicsFramework/GraphicsFramework/holders \
-				../GraphicsFramework \
+LIB_DIRS 	:= 	./Tools
 				
 USER_FLAGS  := -Wall -Wextra -std=c++11 -Wno-unused-parameter -Wno-unused-function -fopenmp
 
@@ -45,7 +41,7 @@ MF := Makefile $(MAIN_DIR)/Makefile
 endif
 
 # old way of doing it -> removed cause a change in the Makefile now forces everything to recompile
-# #define variables in runtime to activate ROOT, SFML or VALGRIND (e.g.: makefile r=1, s=1, v=1; or simply set r=1 in your local makefile)
+# #define variables in runtime to activate ROOT, SFML, VALGRIND or GPROF (e.g.: makefile r=1, s=1, v=1; or simply set r=1 in your local makefile)
 # ifneq ($(or $(r), $(R), $(ROOT)),)
 # ROOT_LD 	:= $(shell root-config --libs)
 # ROOT_CC 	:= $(shell root-config --cflags)
@@ -63,6 +59,13 @@ endif
 # else
 # VALGRIND	:= -O2
 # endif
+
+ifneq ($(or $(d), $(D), $(DEBUG)),)
+DEBUG	:= -pg
+$(info Compiling for DEBUG)
+else
+DEBUG	:= 
+endif
 
 ##############################################################################################
 ########## MAKEFILE
@@ -100,8 +103,8 @@ LIBS_OBJ_FILES 	:= $(foreach file,$(LIBS_CPP_FILES), $(addprefix $(dir $(file)),
 LIBS_DEP_FILES 	:= $(subst .o,.d,$(LIBS_OBJ_FILES))
 #LIBS_OBJ_FILES - replace .cpp by .o and add bin/ before then basename (but after the lib path)
 
-LD_FLAGS := $(USER_FLAGS) $(VALGRIND) $(ROOT_LD) $(SFML_LD)
-CC_FLAGS := $(USER_FLAGS) $(VALGRIND) $(ROOT_CD) $(SFML_CC) $(INCLUDES) -MMD
+LD_FLAGS := $(USER_FLAGS) $(DEBUG) $(VALGRIND) $(ROOT_LD) $(SFML_LD)
+CC_FLAGS := $(USER_FLAGS) $(DEBUG) $(VALGRIND) $(ROOT_CD) $(SFML_CC) $(INCLUDES) -MMD
 
 $(EXECUTABLE): $(MAIN_OBJ_FILES) $(LIBS_OBJ_FILES)
 	@echo compiling $(BLUE) $(notdir $@) $(WHITE) depending $(GREEN) $(notdir $^) $(WHITE)

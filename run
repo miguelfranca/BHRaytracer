@@ -1,4 +1,9 @@
-make -j 4 -s
+
+if [[ "$1" == "d" || "$1" == "debug" ]]; then
+	make -j 4 -s d=1
+else
+	make -j 4 -s
+fi
 
 if [ $? -eq 0 ] ; then
   name=`basename "$(pwd)"`.exe

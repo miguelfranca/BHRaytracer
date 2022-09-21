@@ -1,0 +1,18 @@
+position = {
+	10.0
+	90.0
+	180.0
+}
+velocity = {
+	0.0
+	0.0
+	0.0
+}
+inclination = 180
+azimuth = 0
+fov_horizontal = 90
+fov_vertical = 45
+dimensions = 200
+do_elliptic_parametrization = 0
+grid_angle = 10.0
+grid_thickness = 0.1
